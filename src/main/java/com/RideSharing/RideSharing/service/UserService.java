@@ -1,10 +1,8 @@
 package com.RideSharing.RideSharing.service;
 
-import com.RideSharing.RideSharing.entity.User;
-import com.RideSharing.RideSharing.entity.UserDTO;
-import com.RideSharing.RideSharing.entity.VerificationToken;
-import com.RideSharing.RideSharing.repository.UserRepository;
-import com.RideSharing.RideSharing.repository.VerificationTokenRepository;
+import com.RideSharing.RideSharing.entity.*;
+import com.RideSharing.RideSharing.factory.UserFactory;
+import com.RideSharing.RideSharing.repository.*;
 import com.RideSharing.RideSharing.util.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,6 +21,10 @@ public class UserService implements UserDetailsService {
   @Autowired
   private VerificationTokenRepository _verificationTokenRepository;
 
+
+  @Autowired
+  private UserFactory _userFactory;
+
   @Autowired
   private PasswordEncoder _passwordEncoder;
 
@@ -36,6 +38,33 @@ public class UserService implements UserDetailsService {
       user.setPassword(_passwordEncoder.encode(userDto.getPassword()));
       user.setEnabled(false);
       user.setRole("ADMIN");
+      return _userRepository.save(user);
+  }
+
+  public User registerRider(RiderRegistrationDTO riderDto) {
+      User user = _userFactory.createRider(
+          riderDto.getUsername(),
+          riderDto.getEmail(),
+          _passwordEncoder.encode(riderDto.getPassword()),
+          riderDto.getPhoneNumber(),
+          riderDto.getPaymentMethod(),
+          riderDto.getPreferences()
+      );
+      return _userRepository.save(user);
+  }
+
+  public User registerDriver(DriverRegistrationDTO driverDto) {
+      User user = _userFactory.createDriver(
+          driverDto.getUsername(),
+          driverDto.getEmail(),
+          _passwordEncoder.encode(driverDto.getPassword()),
+          driverDto.getLicenseNumber(),
+          driverDto.getVehicleMake(),
+          driverDto.getVehicleModel(),
+          driverDto.getVehicleYear(),
+          driverDto.getVehicleColor(),
+          driverDto.getVehiclePlateNumber()
+      );
       return _userRepository.save(user);
   }
 

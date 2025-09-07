@@ -1,8 +1,11 @@
 package com.RideSharing.RideSharing.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.CascadeType;
 
 
 @Entity
@@ -14,17 +17,27 @@ public class User {
 
   private String username;
 
+  private String email;
 
   private String password;
-
 
   private String role;
 
   private boolean isEnabled;
 
-  public User(Long userId, String username, String password, String role, boolean isEnabled) {
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, optional = true)
+  private DriverProfile driverProfile;
+
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, optional = true)
+  private RiderProfile riderProfile;
+
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, optional = true)
+  private AdminProfile adminProfile;
+
+  public User(Long userId, String username, String email, String password, String role, boolean isEnabled) {
     this.userId = userId;
     this.username = username;
+    this.email = email;
     this.password = password;
     this.role = role;
     this.isEnabled = isEnabled;
@@ -50,6 +63,7 @@ public class User {
     this.username = username;
   }
 
+  @JsonIgnore
   public String getPassword() {
     return password;
   }
@@ -72,5 +86,37 @@ public class User {
 
   public void setEnabled(boolean enabled) {
     isEnabled = enabled;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public DriverProfile getDriverProfile() {
+    return driverProfile;
+  }
+
+  public void setDriverProfile(DriverProfile driverProfile) {
+    this.driverProfile = driverProfile;
+  }
+
+  public RiderProfile getRiderProfile() {
+    return riderProfile;
+  }
+
+  public void setRiderProfile(RiderProfile riderProfile) {
+    this.riderProfile = riderProfile;
+  }
+
+  public AdminProfile getAdminProfile() {
+    return adminProfile;
+  }
+
+  public void setAdminProfile(AdminProfile adminProfile) {
+    this.adminProfile = adminProfile;
   }
 }

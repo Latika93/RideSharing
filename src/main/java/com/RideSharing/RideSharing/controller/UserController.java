@@ -12,9 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.RideSharing.RideSharing.entity.User;
-import com.RideSharing.RideSharing.entity.UserDTO;
-import com.RideSharing.RideSharing.entity.VerificationToken;
+import com.RideSharing.RideSharing.entity.*;
 import com.RideSharing.RideSharing.service.UserService;
 
 
@@ -35,21 +33,6 @@ public class UserController {
     return registeredUser;
   }
 
-  @PostMapping("/verifyRegistrationToken")
-  public String verifyRegistrationToken(@RequestParam String token) {
-    VerificationToken verificationToken = _userService.verifyRegistrationToken(token);
-    if (verificationToken != null) {
-      _userService.enableUser(verificationToken);
-      return "Token verification successful, user enabled. Please login to proceed.";
-    } else {
-      return "Token verification failed. Please try again.";
-    }
-  }
-
-  @PostMapping("/signin")
-  public String loginUser(@RequestParam String username, @RequestParam String password) {
-    return _userService.loginUser(username, password);
-  }
 
   @PostMapping("/test")
   @PreAuthorize("hasRole('USER')")
@@ -69,9 +52,51 @@ public class UserController {
 
   @GetMapping("/hello")
   public String hello() {
-
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     return "Hello, World!";
+  }
+
+  // New Auth endpoints
+  @PostMapping("/auth/register/rider")
+  public User registerRider(@RequestBody RiderRegistrationDTO riderDto) {
+    User registeredUser = _userService.registerRider(riderDto);
+    String verificationToken = UUID.randomUUID().toString();
+    String verificationUrl = "http://localhost:9800/auth/verifyRegistrationToken?token=" + verificationToken;
+    System.out.println("Please verify your registration by clicking on the following link: " + verificationUrl);
+    _userService.saveVerificationToken(registeredUser, verificationToken);
+    return registeredUser;
+  }
+
+  @PostMapping("/auth/register/driver")
+  public User registerDriver(@RequestBody DriverRegistrationDTO driverDto) {
+    User registeredUser = _userService.registerDriver(driverDto);
+    String verificationToken = UUID.randomUUID().toString();
+    String verificationUrl = "http://localhost:9800/auth/verifyRegistrationToken?token=" + verificationToken;
+    System.out.println("Please verify your registration by clicking on the following link: " + verificationUrl);
+    _userService.saveVerificationToken(registeredUser, verificationToken);
+    return registeredUser;
+  }
+
+  @PostMapping("/auth/login")
+  public String loginUser(@RequestParam String username, @RequestParam String password) {
+    return _userService.loginUser(username, password);
+  }
+
+  @PostMapping("/auth/logout")
+  public String logoutUser() {
+    // In a real implementation, you would invalidate the JWT token
+    // For now, we'll just return a success message
+    return "Logout successful";
+  }
+
+  @PostMapping("/auth/verifyRegistrationToken")
+  public String verifyRegistrationToken(@RequestParam String token) {
+    VerificationToken verificationToken = _userService.verifyRegistrationToken(token);
+    if (verificationToken != null) {
+      _userService.enableUser(verificationToken);
+      return "Token verification successful, user enabled. Please login to proceed.";
+    } else {
+      return "Token verification failed. Please try again.";
+    }
   }
 
 }

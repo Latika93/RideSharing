@@ -25,8 +25,13 @@ public class AuthConfig {
     try {
       httpSecurity.csrf(csrf -> csrf.disable())
           .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-              .requestMatchers("/register", "/verifyRegistrationToken", "/signin", "/test")
+              .requestMatchers("/register", "/verifyRegistrationToken", "/signin", "/test", 
+                              "/auth/register/rider", "/auth/register/driver", "/auth/login", 
+                              "/auth/logout", "/auth/verifyRegistrationToken", "/hello")
               .permitAll()
+              .requestMatchers("/driver/**").hasRole("DRIVER")
+              .requestMatchers("/rider/**").hasRole("RIDER")
+              .requestMatchers("/admin/**").hasRole("ADMIN")
               .anyRequest()
               .authenticated())
           .formLogin(formLogin -> formLogin.defaultSuccessUrl("/hello", true).permitAll())
@@ -36,4 +41,5 @@ public class AuthConfig {
       throw new RuntimeException("Error configuring security filter chain", e);
     }
   }
+  
 }

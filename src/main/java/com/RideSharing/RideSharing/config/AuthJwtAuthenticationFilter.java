@@ -52,7 +52,8 @@ public class AuthJwtAuthenticationFilter extends OncePerRequestFilter {
   protected boolean shouldNotFilter(HttpServletRequest request) {
     // Skip filtering for specific paths
     String path = request.getRequestURI();
-    return path.contains("register") || path.contains("signin") || path.contains("verifyRegistration");
+    return path.contains("register") || path.contains("signin") || path.contains("login") || path.contains("verifyRegistration") 
+           || path.contains("/auth/") || path.contains("/hello");
   }
 }
 
