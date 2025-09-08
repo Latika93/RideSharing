@@ -14,47 +14,71 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-
+@Component
 public class AuthJwtAuthenticationFilter extends OncePerRequestFilter {
+
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-      throws ServletException, IOException {
+          throws ServletException, IOException {
 
-    String authorizationHeader = request.getHeader("authorization");
+    System.out.println("[JWT Filter] Processing: " + request.getMethod() + " " + request.getRequestURI());
 
-    // Check if the Authorization header is present
-    if (authorizationHeader == null) {
+    String authorizationHeader = request.getHeader("Authorization");
+
+    // Check if the Authorization header is present and starts with "Bearer "
+    if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+      System.out.println("[JWT Filter] No valid Authorization header found");
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-      response.getWriter().write("Missing Authorization header");
+      response.setContentType("application/json");
+      response.getWriter().write("{\"error\":\"Missing or invalid Authorization header\",\"message\":\"Please provide Bearer token\"}");
       return;
     }
 
-    Claims fetchedClaims = TokenUtil.validateSignedToken(authorizationHeader);
-    if(fetchedClaims == null)  {
+    try {
+      // Extract token (remove "Bearer " prefix)
+      String token = authorizationHeader.substring(7);
+      Claims fetchedClaims = TokenUtil.validateSignedToken(token);
+
+      if(fetchedClaims == null)  {
+        System.out.println("[JWT Filter] Token validation failed");
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+        response.getWriter().write("{\"error\":\"Invalid token\",\"message\":\"JWT token is invalid or expired\"}");
+        return;
+      }
+
+      String username = fetchedClaims.getSubject();
+      String role = fetchedClaims.get("roles", String.class);
+      System.out.println("[JWT Filter] Authenticated user: " + username + " with role: " + role);
+
+      List<SimpleGrantedAuthority> authorityList = List.of(new SimpleGrantedAuthority(role));
+      UsernamePasswordAuthenticationToken authentication =
+              new UsernamePasswordAuthenticationToken(username, null, authorityList);
+
+      SecurityContextHolder.getContext().setAuthentication(authentication);
+      System.out.println("[JWT Filter] Authentication set successfully");
+
+    } catch (Exception e) {
+      System.out.println("[JWT Filter] Exception during token processing: " + e.getMessage());
       response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-      response.getWriter().write("Invalid user token");
+      response.setContentType("application/json");
+      response.getWriter().write("{\"error\":\"Token processing failed\",\"message\":\"" + e.getMessage() + "\"}");
       return;
     }
-
-    String username = fetchedClaims.getSubject();
-    String role = fetchedClaims.get("roles", String.class);
-    List<SimpleGrantedAuthority> authorityList = List.of(new SimpleGrantedAuthority(role));
-    UsernamePasswordAuthenticationToken authentication =
-        new UsernamePasswordAuthenticationToken(username, null, authorityList);
-
-    SecurityContextHolder.getContext().setAuthentication(authentication);
 
     filterChain.doFilter(request, response);
-
   }
 
   @Override
   protected boolean shouldNotFilter(HttpServletRequest request) {
     // Skip filtering for specific paths
     String path = request.getRequestURI();
-    return path.contains("register") || path.contains("signin") || path.contains("login") || path.contains("verifyRegistration") 
-           || path.contains("/auth/") || path.contains("/hello");
+    boolean shouldSkip = path.contains("/auth/") ||
+            path.contains("/register") ||
+            path.contains("/hello") ||
+            path.contains("/error");
+
+    System.out.println("[JWT Filter] Should skip filtering for " + path + ": " + shouldSkip);
+    return shouldSkip;
   }
 }
-
-// Servlet -> Filter1 -> Filter2 -> Filter3 -> Controller -> Service -> Repository
