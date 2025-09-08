@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Embedded;
 
 @Entity
 public class DriverProfile {
@@ -22,6 +23,11 @@ public class DriverProfile {
     private String vehicleColor;
     private String vehiclePlateNumber;
     private boolean isAvailable;
+    private Double rating;
+    private Integer activeRides;
+
+    @Embedded
+    private Location currentLocation;
 
     @OneToOne
     @JoinColumn(name = "user_id")
@@ -40,6 +46,8 @@ public class DriverProfile {
         this.vehicleColor = vehicleColor;
         this.vehiclePlateNumber = vehiclePlateNumber;
         this.isAvailable = isAvailable;
+        this.rating = 5.0; // Default rating
+        this.activeRides = 0; // Default active rides
         this.user = user;
     }
 
@@ -115,5 +123,29 @@ public class DriverProfile {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Double getRating() {
+        return rating;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
+    }
+
+    public Integer getActiveRides() {
+        return activeRides;
+    }
+
+    public void setActiveRides(Integer activeRides) {
+        this.activeRides = activeRides;
+    }
+
+    public Location getCurrentLocation() {
+        return currentLocation;
+    }
+
+    public void setCurrentLocation(Location currentLocation) {
+        this.currentLocation = currentLocation;
     }
 }

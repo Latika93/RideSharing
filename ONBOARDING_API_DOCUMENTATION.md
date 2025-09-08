@@ -22,7 +22,17 @@ GET /rider/{id} → Fetch rider profile (default payment method, preferences).
 
 PATCH /rider/{id} → Update profile (preferred vehicle, payment method, etc.).
 
-4. Trip Management
+4. Matching & Location
+
+PATCH /driver/{id}/location → Driver updates their current GPS coordinates.
+
+PATCH /rider/{id}/location → Rider updates pickup location (optional if not passed in trip request).
+
+GET /drivers/nearby?lat=..&lng=.. → Return a list of available drivers sorted by proximity.
+
+
+
+5. Trip Management
 
 POST /trip/request
 
@@ -47,14 +57,6 @@ PATCH /trip/{id}/cancel
 Rider or driver cancels before completion. State → CANCELLED.
 
 GET /trip/{id} → Get trip details (status, rider, driver, fare).
-
-5. Matching & Location
-
-PATCH /driver/{id}/location → Driver updates their current GPS coordinates.
-
-PATCH /rider/{id}/location → Rider updates pickup location (optional if not passed in trip request).
-
-GET /drivers/nearby?lat=..&lng=.. → Return a list of available drivers sorted by proximity.
 
 6. Payments
 

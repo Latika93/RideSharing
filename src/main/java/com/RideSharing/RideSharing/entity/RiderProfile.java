@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Embedded;
 
 @Entity
 public class RiderProfile {
@@ -18,6 +19,9 @@ public class RiderProfile {
     private String phoneNumber;
     private String paymentMethod;
     private String preferences;
+
+    @Embedded
+    private Location currentLocation;
 
     @OneToOne
     @JoinColumn(name = "user_id")
@@ -73,5 +77,13 @@ public class RiderProfile {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Location getCurrentLocation() {
+        return currentLocation;
+    }
+
+    public void setCurrentLocation(Location currentLocation) {
+        this.currentLocation = currentLocation;
     }
 }
