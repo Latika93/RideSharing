@@ -37,8 +37,8 @@ public class AuthConfig {
             // Disable CSRF
             .csrf(csrf -> csrf.disable())
 
-            // Configure CORS properly (don't just disable it)
-            .cors(cors -> cors.disable())
+            // Configure CORS properly (use our CorsConfig bean)
+            .cors(cors -> {})
 
             // Stateless session
             .sessionManagement(session -> session

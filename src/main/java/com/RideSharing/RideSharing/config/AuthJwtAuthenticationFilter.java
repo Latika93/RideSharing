@@ -71,14 +71,17 @@ public class AuthJwtAuthenticationFilter extends OncePerRequestFilter {
 
   @Override
   protected boolean shouldNotFilter(HttpServletRequest request) {
-    // Skip filtering for specific paths
+    // Skip filtering for specific paths and OPTIONS requests (CORS preflight)
     String path = request.getRequestURI();
+    String method = request.getMethod();
+    
     boolean shouldSkip = path.contains("/auth/") ||
             path.contains("/register") ||
             path.contains("/hello") ||
-            path.contains("/error");
+            path.contains("/error") ||
+            "OPTIONS".equals(method); // Skip JWT validation for CORS preflight requests
 
-    System.out.println("[JWT Filter] Should skip filtering for " + path + ": " + shouldSkip);
+    System.out.println("[JWT Filter] Should skip filtering for " + method + " " + path + ": " + shouldSkip);
     return shouldSkip;
   }
 }

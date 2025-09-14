@@ -32,6 +32,10 @@ public class UserService implements UserDetailsService {
 
   }
 
+  public User findByUsername(String username){
+    return _userRepository.findByUsername(username);
+  }
+
   public User registerUser(UserDTO userDto) {
       User user = new User();
       user.setUsername(userDto.getUsername());

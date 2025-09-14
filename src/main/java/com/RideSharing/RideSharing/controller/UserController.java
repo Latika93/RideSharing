@@ -1,5 +1,7 @@
 package com.RideSharing.RideSharing.controller;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,16 +10,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.RideSharing.RideSharing.entity.*;
 import com.RideSharing.RideSharing.service.UserService;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
   @Autowired
@@ -86,18 +85,31 @@ public class UserController {
   // Fixed login endpoint to accept JSON
   @PostMapping("/auth/login")
   public ResponseEntity<?> loginUser(@RequestBody LoginDTO loginDto) {
-    try {
-      System.out.println("Login attempt for username: " + loginDto.getUsername());
-      String token = _userService.loginUser(loginDto.getUsername(), loginDto.getPassword());
-      return ResponseEntity.ok("{\"token\":\"" + token + "\",\"message\":\"Login successful\"}");
-    } catch (Exception e) {
-      System.out.println("Login failed: " + e.getMessage());
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-              .body("{\"error\":\"Login failed\",\"message\":\"" + e.getMessage() + "\"}");
-    }
+      try {
+          System.out.println("Login attempt for username: " + loginDto.getUsername());
+
+          String token = _userService.loginUser(loginDto.getUsername(), loginDto.getPassword());
+          User user = _userService.findByUsername(loginDto.getUsername());
+
+          Map<String, Object> response = new HashMap<>();
+          response.put("token", token);
+          response.put("id", user.getUserId());
+          response.put("username", user.getUsername());
+          response.put("message", "Login successful");
+
+          return ResponseEntity.ok(response);
+
+      } catch (Exception e) {
+          System.out.println("Login failed: " + e.getMessage());
+          Map<String, String> errorResponse = new HashMap<>();
+          errorResponse.put("error", "Login failed");
+          errorResponse.put("message", e.getMessage());
+          return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+      }
   }
 
-  // Alternative endpoint that still accepts form parameters (for testing)
+
+    // Alternative endpoint that still accepts form parameters (for testing)
   @PostMapping("/auth/login-form")
   public ResponseEntity<?> loginUserForm(@RequestParam String username, @RequestParam String password) {
     try {
