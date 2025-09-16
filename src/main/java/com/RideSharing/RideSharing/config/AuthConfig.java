@@ -53,6 +53,9 @@ public class AuthConfig {
                     // Allow ALL auth endpoints without authentication
                     .requestMatchers("/auth/**").permitAll()
                     .requestMatchers("/register", "/hello", "/error").permitAll()
+                    
+                    // Allow fare calculation endpoints with authentication
+                    .requestMatchers("/api/fare/**").authenticated()
 
                     // Role-based access (only after login works)
                     .requestMatchers("/driver/**").hasRole("DRIVER")
