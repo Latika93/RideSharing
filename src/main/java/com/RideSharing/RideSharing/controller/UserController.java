@@ -14,13 +14,28 @@ import org.springframework.web.bind.annotation.*;
 
 import com.RideSharing.RideSharing.entity.*;
 import com.RideSharing.RideSharing.service.UserService;
+import com.RideSharing.RideSharing.service.EmailService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
+@Tag(name = "User Management", description = "APIs for user registration, authentication, and profile management")
 public class UserController {
 
   @Autowired
   private UserService _userService;
+
+  @Autowired
+  private EmailService emailService;
 
   @PostMapping("/register")
   public User registerUser(@RequestBody UserDTO user) {
@@ -54,6 +69,13 @@ public class UserController {
   }
 
   // New Auth endpoints
+  @Operation(summary = "Register a new rider", description = "Creates a new rider account with verification token")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Rider registered successfully", 
+          content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))),
+      @ApiResponse(responseCode = "400", description = "Invalid registration data", 
+          content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "{\"error\":\"Registration failed\",\"message\":\"Username already exists\"}")))
+  })
   @PostMapping("/auth/register/rider")
   public ResponseEntity<?> registerRider(@RequestBody RiderRegistrationDTO riderDto) {
     try {
@@ -62,12 +84,24 @@ public class UserController {
       String verificationUrl = "http://localhost:9800/auth/verifyRegistrationToken?token=" + verificationToken;
       System.out.println("Please verify your registration by clicking on the following link: " + verificationUrl);
       _userService.saveVerificationToken(registeredUser, verificationToken);
+      emailService.sendSimpleMail(
+              registeredUser.getEmail(),
+              "Welcome!",
+              "Hey there 👋, your account has been created successfully. Click : " + verificationUrl
+      );
       return ResponseEntity.ok(registeredUser);
     } catch (Exception e) {
       return ResponseEntity.badRequest().body("{\"error\":\"Registration failed\",\"message\":\"" + e.getMessage() + "\"}");
     }
   }
 
+  @Operation(summary = "Register a new driver", description = "Creates a new driver account with verification token")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Driver registered successfully", 
+          content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))),
+      @ApiResponse(responseCode = "400", description = "Invalid registration data", 
+          content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "{\"error\":\"Registration failed\",\"message\":\"Username already exists\"}")))
+  })
   @PostMapping("/auth/register/driver")
   public ResponseEntity<?> registerDriver(@RequestBody DriverRegistrationDTO driverDto) {
     try {
@@ -76,13 +110,24 @@ public class UserController {
       String verificationUrl = "http://localhost:9800/auth/verifyRegistrationToken?token=" + verificationToken;
       System.out.println("Please verify your registration by clicking on the following link: " + verificationUrl);
       _userService.saveVerificationToken(registeredUser, verificationToken);
+      emailService.sendSimpleMail(
+              registeredUser.getEmail(),
+              "Welcome!",
+              "Hey Captain 👋, your account has been created successfully. Click : " + verificationUrl
+      );
       return ResponseEntity.ok(registeredUser);
     } catch (Exception e) {
       return ResponseEntity.badRequest().body("{\"error\":\"Registration failed\",\"message\":\"" + e.getMessage() + "\"}");
     }
   }
 
-  // Fixed login endpoint to accept JSON
+  @Operation(summary = "User login", description = "Authenticates user and returns JWT token")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Login successful", 
+          content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "{\"token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\"id\":1,\"username\":\"john_doe\",\"message\":\"Login successful\"}"))),
+      @ApiResponse(responseCode = "401", description = "Invalid credentials", 
+          content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "{\"error\":\"Login failed\",\"message\":\"Invalid username or password\"}")))
+  })
   @PostMapping("/auth/login")
   public ResponseEntity<?> loginUser(@RequestBody LoginDTO loginDto) {
       try {
