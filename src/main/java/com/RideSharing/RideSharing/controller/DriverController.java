@@ -18,9 +18,20 @@ import com.RideSharing.RideSharing.repository.UserRepository;
 import com.RideSharing.RideSharing.service.DriverService;
 import com.RideSharing.RideSharing.service.LocationTrackingService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/driver")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+@Tag(name = "Driver Operations", description = "APIs for driver profile management, location tracking, and status updates")
 public class DriverController {
 
     @Autowired

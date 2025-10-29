@@ -10,4 +10,7 @@ public class RideSharingApplication {
 		SpringApplication.run(RideSharingApplication.class, args);
 	}
 
+
+//	Instance ID = i-08d2dec7bfa873ba0
+//	Public IPv4 address = 13.61.8.3
 }

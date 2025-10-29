@@ -10,21 +10,35 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 /**
  * Controller for handling trip lifecycle operations
  */
 @RestController
 @RequestMapping("/api/trip")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+@Tag(name = "Trip Management", description = "APIs for trip lifecycle management including creation, acceptance, start, completion, and cancellation")
 public class TripController {
     
     @Autowired
     private TripService tripService;
     
-    /**
-     * Create a new trip request
-     * POST /trip/request
-     */
+    @Operation(summary = "Create trip request", description = "Creates a new trip request for a rider")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Trip request created successfully", 
+            content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "{\"success\":true,\"message\":\"Trip request created successfully\",\"trip\":{\"id\":1,\"riderId\":1,\"status\":\"PENDING\"}}"))),
+        @ApiResponse(responseCode = "400", description = "Invalid request data", 
+            content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "{\"success\":false,\"message\":\"Invalid rider ID\"}")))
+    })
     @PostMapping("/request")
     public ResponseEntity<Map<String, Object>> createTripRequest(@RequestBody TripRequestDTO tripRequestDTO) {
         Map<String, Object> response = new HashMap<>();

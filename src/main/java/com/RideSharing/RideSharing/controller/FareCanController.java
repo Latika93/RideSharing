@@ -15,13 +15,31 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/auth/fare")
+@Tag(name = "Fare Calculation", description = "APIs for fare calculation and coupon management")
 public class FareCanController {
 
     @Autowired
     private FareCalculationService fareCalculationService;
 
+    @Operation(summary = "Calculate ride fare", description = "Calculates the total fare for a ride based on distance, duration, and other factors")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Fare calculated successfully", 
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = FareCalculationResult.class))),
+        @ApiResponse(responseCode = "500", description = "Internal server error", 
+            content = @Content(mediaType = "application/json", examples = @ExampleObject(value = "{\"error\":\"Internal Server Error\",\"message\":\"Calculation failed\"}")))
+    })
     @PostMapping("/calculate")
     public ResponseEntity<?> calculateFare(@RequestBody FareCalculationRequest request) {
         try {

@@ -9,12 +9,20 @@ public class LocationDTO {
     
     private Double longitude;
     
+    private String address;
+    
     // Constructors
     public LocationDTO() {}
     
     public LocationDTO(Double latitude, Double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+    
+    public LocationDTO(Double latitude, Double longitude, String address) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.address = address;
     }
     
     // Getters and Setters
@@ -34,6 +42,14 @@ public class LocationDTO {
         this.longitude = longitude;
     }
     
+    public String getAddress() {
+        return address;
+    }
+    
+    public void setAddress(String address) {
+        this.address = address;
+    }
+    
     /**
      * Convert to Location entity
      */
@@ -46,6 +62,7 @@ public class LocationDTO {
         return "LocationDTO{" +
                 "latitude=" + latitude +
                 ", longitude=" + longitude +
+                ", address='" + address + '\'' +
                 '}';
     }
 }

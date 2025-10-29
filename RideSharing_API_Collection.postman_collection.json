@@ -1,0 +1,1300 @@
+{
+    "info": {
+        "_postman_id": "ridesharing-api-collection",
+        "name": "RideSharing API Collection",
+        "description": "Complete API collection for RideSharing platform including user management, trip management, fare calculation, driver operations, and real-time features",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Authentication",
+            "item": [
+                {
+                    "name": "Register Rider",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"username\": \"john_rider\",\n  \"password\": \"password123\",\n  \"email\": \"john@example.com\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"phoneNumber\": \"+1234567890\",\n  \"paymentMethod\": \"CREDIT_CARD\",\n  \"preferences\": \"QUIET_RIDE\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/auth/register/rider",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "register",
+                                "rider"
+                            ]
+                        },
+                        "description": "Register a new rider account"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Register Driver",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"username\": \"jane_driver\",\n  \"password\": \"password123\",\n  \"email\": \"jane@example.com\",\n  \"firstName\": \"Jane\",\n  \"lastName\": \"Smith\",\n  \"licenseNumber\": \"DL123456789\",\n  \"vehicleMake\": \"Toyota\",\n  \"vehicleModel\": \"Camry\",\n  \"vehicleYear\": 2020,\n  \"vehicleColor\": \"Silver\",\n  \"vehiclePlateNumber\": \"ABC123\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/auth/register/driver",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "register",
+                                "driver"
+                            ]
+                        },
+                        "description": "Register a new driver account"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Login",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"username\": \"john_rider\",\n  \"password\": \"password123\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/auth/login",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "login"
+                            ]
+                        },
+                        "description": "Login user and get JWT token"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Verify Registration Token",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/auth/verifyRegistrationToken?token={{verification_token}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "verifyRegistrationToken"
+                            ],
+                            "query": [
+                                {
+                                    "key": "token",
+                                    "value": "{{verification_token}}"
+                                }
+                            ]
+                        },
+                        "description": "Verify user registration with token"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Logout",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{jwt_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/auth/logout",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "logout"
+                            ]
+                        },
+                        "description": "Logout user"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "User authentication and registration endpoints"
+        },
+        {
+            "name": "Fare Calculation",
+            "item": [
+                {
+                    "name": "Calculate Fare",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{jwt_token}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"distance\": 5.5,\n  \"duration\": 15,\n  \"rideTime\": \"2024-01-15T10:30:00\",\n  \"weatherCondition\": \"CLEAR\",\n  \"couponCode\": \"SAVE10\",\n  \"rideType\": \"ECONOMY\",\n  \"baseRate\": 2.5\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/auth/fare/calculate",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "fare",
+                                "calculate"
+                            ]
+                        },
+                        "description": "Calculate ride fare based on distance, duration, and other factors"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create Coupon",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{jwt_token}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"code\": \"SAVE10\",\n  \"description\": \"10% off your ride\",\n  \"discountType\": \"PERCENTAGE\",\n  \"discountValue\": 10.0,\n  \"minOrderAmount\": 20.0,\n  \"maxDiscountAmount\": 50.0,\n  \"expiryDate\": \"2024-12-31T23:59:59\",\n  \"usageLimit\": 100\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/auth/fare/coupons",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "fare",
+                                "coupons"
+                            ]
+                        },
+                        "description": "Create a new coupon"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get All Valid Coupons",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{jwt_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/auth/fare/coupons/valid",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "fare",
+                                "coupons",
+                                "valid"
+                            ]
+                        },
+                        "description": "Get all valid coupons"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Coupon by Code",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{jwt_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/auth/fare/coupons/{{coupon_code}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "fare",
+                                "coupons",
+                                "{{coupon_code}}"
+                            ]
+                        },
+                        "description": "Get coupon details by code"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Coupon",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{jwt_token}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"code\": \"SAVE15\",\n  \"description\": \"15% off your ride\",\n  \"discountType\": \"PERCENTAGE\",\n  \"discountValue\": 15.0,\n  \"minOrderAmount\": 25.0,\n  \"maxDiscountAmount\": 75.0,\n  \"expiryDate\": \"2024-12-31T23:59:59\",\n  \"usageLimit\": 50\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/auth/fare/coupons/{{coupon_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "fare",
+                                "coupons",
+                                "{{coupon_id}}"
+                            ]
+                        },
+                        "description": "Update an existing coupon"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Coupon",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{jwt_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/auth/fare/coupons/{{coupon_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "fare",
+                                "coupons",
+                                "{{coupon_id}}"
+                            ]
+                        },
+                        "description": "Delete a coupon"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Fare Service Health Check",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/auth/fare/health",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "fare",
+                                "health"
+                            ]
+                        },
+                        "description": "Check fare calculation service health"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Fare calculation and coupon management endpoints"
+        },
+        {
+            "name": "Trip Management",
+            "item": [
+                {
+                    "name": "Create Trip Request",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"riderId\": 1,\n  \"pickupLocation\": {\n    \"latitude\": 40.7128,\n    \"longitude\": -74.0060,\n    \"address\": \"123 Main St, New York, NY\"\n  },\n  \"dropoffLocation\": {\n    \"latitude\": 40.7589,\n    \"longitude\": -73.9851,\n    \"address\": \"456 Broadway, New York, NY\"\n  },\n  \"matchingStrategy\": \"nearest\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/trip/request",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "trip",
+                                "request"
+                            ]
+                        },
+                        "description": "Create a new trip request"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Accept Trip",
+                    "request": {
+                        "method": "PATCH",
+                        "url": {
+                            "raw": "{{base_url}}/api/trip/{{trip_id}}/accept?driverId={{driver_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "trip",
+                                "{{trip_id}}",
+                                "accept"
+                            ],
+                            "query": [
+                                {
+                                    "key": "driverId",
+                                    "value": "{{driver_id}}"
+                                }
+                            ]
+                        },
+                        "description": "Driver accepts a trip"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Start Trip",
+                    "request": {
+                        "method": "PATCH",
+                        "url": {
+                            "raw": "{{base_url}}/api/trip/{{trip_id}}/start?driverId={{driver_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "trip",
+                                "{{trip_id}}",
+                                "start"
+                            ],
+                            "query": [
+                                {
+                                    "key": "driverId",
+                                    "value": "{{driver_id}}"
+                                }
+                            ]
+                        },
+                        "description": "Start a trip (rider is onboard)"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Complete Trip",
+                    "request": {
+                        "method": "PATCH",
+                        "url": {
+                            "raw": "{{base_url}}/api/trip/{{trip_id}}/end?driverId={{driver_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "trip",
+                                "{{trip_id}}",
+                                "end"
+                            ],
+                            "query": [
+                                {
+                                    "key": "driverId",
+                                    "value": "{{driver_id}}"
+                                }
+                            ]
+                        },
+                        "description": "Complete a trip"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Cancel Trip",
+                    "request": {
+                        "method": "PATCH",
+                        "url": {
+                            "raw": "{{base_url}}/api/trip/{{trip_id}}/cancel?reason=Driver unavailable&cancelledBy=RIDER&userId={{user_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "trip",
+                                "{{trip_id}}",
+                                "cancel"
+                            ],
+                            "query": [
+                                {
+                                    "key": "reason",
+                                    "value": "Driver unavailable"
+                                },
+                                {
+                                    "key": "cancelledBy",
+                                    "value": "RIDER"
+                                },
+                                {
+                                    "key": "userId",
+                                    "value": "{{user_id}}"
+                                }
+                            ]
+                        },
+                        "description": "Cancel a trip"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Trip Details",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/api/trip/{{trip_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "trip",
+                                "{{trip_id}}"
+                            ]
+                        },
+                        "description": "Get trip details by ID"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Active Trips by Rider",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/api/trip/rider/{{rider_id}}/active",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "trip",
+                                "rider",
+                                "{{rider_id}}",
+                                "active"
+                            ]
+                        },
+                        "description": "Get active trips for a rider"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Active Trips by Driver",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/api/trip/driver/{{driver_id}}/active",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "trip",
+                                "driver",
+                                "{{driver_id}}",
+                                "active"
+                            ]
+                        },
+                        "description": "Get active trips for a driver"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Trip History by Rider",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/api/trip/rider/{{rider_id}}/history",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "trip",
+                                "rider",
+                                "{{rider_id}}",
+                                "history"
+                            ]
+                        },
+                        "description": "Get trip history for a rider"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Trip History by Driver",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/api/trip/driver/{{driver_id}}/history",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "trip",
+                                "driver",
+                                "{{driver_id}}",
+                                "history"
+                            ]
+                        },
+                        "description": "Get trip history for a driver"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Trip lifecycle management endpoints"
+        },
+        {
+            "name": "Driver Operations",
+            "item": [
+                {
+                    "name": "Update Driver Status",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{jwt_token}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"isAvailable\": true\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/driver/{{driver_id}}/status",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "driver",
+                                "{{driver_id}}",
+                                "status"
+                            ]
+                        },
+                        "description": "Update driver availability status"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Driver Profile",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{jwt_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/driver/{{driver_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "driver",
+                                "{{driver_id}}"
+                            ]
+                        },
+                        "description": "Get driver profile information"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Driver Location",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{jwt_token}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"latitude\": 40.7128,\n  \"longitude\": -74.0060,\n  \"speed\": 25.5,\n  \"heading\": 90.0\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/driver/{{driver_id}}/location",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "driver",
+                                "{{driver_id}}",
+                                "location"
+                            ]
+                        },
+                        "description": "Update driver's current location"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Driver Location",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{jwt_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/driver/{{driver_id}}/location",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "driver",
+                                "{{driver_id}}",
+                                "location"
+                            ]
+                        },
+                        "description": "Get driver's current location"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Driver Location History",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{jwt_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/driver/{{driver_id}}/location/history?limit=10",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "driver",
+                                "{{driver_id}}",
+                                "location",
+                                "history"
+                            ],
+                            "query": [
+                                {
+                                    "key": "limit",
+                                    "value": "10"
+                                }
+                            ]
+                        },
+                        "description": "Get driver's location history"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Driver-specific operations and location tracking"
+        },
+        {
+            "name": "Rider Operations",
+            "item": [
+                {
+                    "name": "Get Rider Profile",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{jwt_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/rider/{{rider_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "rider",
+                                "{{rider_id}}"
+                            ]
+                        },
+                        "description": "Get rider profile information"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Rider Profile",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{jwt_token}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"phoneNumber\": \"+1234567890\",\n  \"paymentMethod\": \"DEBIT_CARD\",\n  \"preferences\": \"QUIET_RIDE\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/rider/{{rider_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "rider",
+                                "{{rider_id}}"
+                            ]
+                        },
+                        "description": "Update rider profile"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Driver Location for Rider",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{jwt_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/rider/{{rider_id}}/driver/{{driver_id}}/location",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "rider",
+                                "{{rider_id}}",
+                                "driver",
+                                "{{driver_id}}",
+                                "location"
+                            ]
+                        },
+                        "description": "Get driver's current location for a rider"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Nearby Drivers",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{jwt_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/rider/{{rider_id}}/drivers/nearby?latitude=40.7128&longitude=-74.0060&radiusKm=5.0",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "rider",
+                                "{{rider_id}}",
+                                "drivers",
+                                "nearby"
+                            ],
+                            "query": [
+                                {
+                                    "key": "latitude",
+                                    "value": "40.7128"
+                                },
+                                {
+                                    "key": "longitude",
+                                    "value": "-74.0060"
+                                },
+                                {
+                                    "key": "radiusKm",
+                                    "value": "5.0"
+                                }
+                            ]
+                        },
+                        "description": "Get nearby available drivers"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Rider-specific operations and profile management"
+        },
+        {
+            "name": "Driver-Rider Matching",
+            "item": [
+                {
+                    "name": "Update Driver Location (Matching)",
+                    "request": {
+                        "method": "PATCH",
+                        "url": {
+                            "raw": "{{base_url}}/api/matching/driver/{{driver_id}}/location?lat=40.7128&lng=-74.0060",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "matching",
+                                "driver",
+                                "{{driver_id}}",
+                                "location"
+                            ],
+                            "query": [
+                                {
+                                    "key": "lat",
+                                    "value": "40.7128"
+                                },
+                                {
+                                    "key": "lng",
+                                    "value": "-74.0060"
+                                }
+                            ]
+                        },
+                        "description": "Update driver location for matching service"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Rider Location (Matching)",
+                    "request": {
+                        "method": "PATCH",
+                        "url": {
+                            "raw": "{{base_url}}/api/matching/rider/{{rider_id}}/location?lat=40.7128&lng=-74.0060",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "matching",
+                                "rider",
+                                "{{rider_id}}",
+                                "location"
+                            ],
+                            "query": [
+                                {
+                                    "key": "lat",
+                                    "value": "40.7128"
+                                },
+                                {
+                                    "key": "lng",
+                                    "value": "-74.0060"
+                                }
+                            ]
+                        },
+                        "description": "Update rider location for matching service"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Nearby Drivers (Matching)",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/api/matching/drivers/nearby?lat=40.7128&lng=-74.0060&radius=5.0",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "matching",
+                                "drivers",
+                                "nearby"
+                            ],
+                            "query": [
+                                {
+                                    "key": "lat",
+                                    "value": "40.7128"
+                                },
+                                {
+                                    "key": "lng",
+                                    "value": "-74.0060"
+                                },
+                                {
+                                    "key": "radius",
+                                    "value": "5.0"
+                                }
+                            ]
+                        },
+                        "description": "Get nearby available drivers for matching"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Match Nearest Driver",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "{{base_url}}/api/matching/match/nearest?riderId={{rider_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "matching",
+                                "match",
+                                "nearest"
+                            ],
+                            "query": [
+                                {
+                                    "key": "riderId",
+                                    "value": "{{rider_id}}"
+                                }
+                            ]
+                        },
+                        "description": "Match rider with nearest available driver"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Match Least Busy Driver",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "{{base_url}}/api/matching/match/least-busy?riderId={{rider_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "matching",
+                                "match",
+                                "least-busy"
+                            ],
+                            "query": [
+                                {
+                                    "key": "riderId",
+                                    "value": "{{rider_id}}"
+                                }
+                            ]
+                        },
+                        "description": "Match rider with least busy driver"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Match High Rating Driver",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "{{base_url}}/api/matching/match/high-rating?riderId={{rider_id}}",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "matching",
+                                "match",
+                                "high-rating"
+                            ],
+                            "query": [
+                                {
+                                    "key": "riderId",
+                                    "value": "{{rider_id}}"
+                                }
+                            ]
+                        },
+                        "description": "Match rider with highest rated driver"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Driver-rider matching algorithms and location services"
+        },
+        {
+            "name": "WebSocket Endpoints",
+            "item": [
+                {
+                    "name": "Location Update (WebSocket)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"driverId\": \"1\",\n  \"tripId\": \"1\",\n  \"latitude\": 40.7128,\n  \"longitude\": -74.0060,\n  \"speed\": 25.5,\n  \"heading\": 90.0\n}"
+                        },
+                        "url": {
+                            "raw": "ws://localhost:9800/ws",
+                            "protocol": "ws",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "9800",
+                            "path": [
+                                "ws"
+                            ]
+                        },
+                        "description": "WebSocket endpoint for real-time location updates. Send to /app/location.update"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Driver Status Update (WebSocket)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"tripId\": \"1\",\n  \"driverId\": \"1\",\n  \"status\": \"ARRIVED\"\n}"
+                        },
+                        "url": {
+                            "raw": "ws://localhost:9800/ws",
+                            "protocol": "ws",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "9800",
+                            "path": [
+                                "ws"
+                            ]
+                        },
+                        "description": "WebSocket endpoint for driver status updates. Send to /app/driver.status"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Subscribe to Trip (WebSocket)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"tripId\": \"1\",\n  \"userId\": \"1\",\n  \"userType\": \"rider\"\n}"
+                        },
+                        "url": {
+                            "raw": "ws://localhost:9800/ws",
+                            "protocol": "ws",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "9800",
+                            "path": [
+                                "ws"
+                            ]
+                        },
+                        "description": "WebSocket endpoint to subscribe to trip updates. Send to /app/trip.subscribe"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Unsubscribe from Trip (WebSocket)",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"tripId\": \"1\",\n  \"userId\": \"1\"\n}"
+                        },
+                        "url": {
+                            "raw": "ws://localhost:9800/ws",
+                            "protocol": "ws",
+                            "host": [
+                                "localhost"
+                            ],
+                            "port": "9800",
+                            "path": [
+                                "ws"
+                            ]
+                        },
+                        "description": "WebSocket endpoint to unsubscribe from trip updates. Send to /app/trip.unsubscribe"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "WebSocket endpoints for real-time communication"
+        },
+        {
+            "name": "Utility Endpoints",
+            "item": [
+                {
+                    "name": "Hello World",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/hello",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "hello"
+                            ]
+                        },
+                        "description": "Simple hello world endpoint"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Test Authentication",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{jwt_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/test",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "test"
+                            ]
+                        },
+                        "description": "Test authenticated endpoint"
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Utility and test endpoints"
+        }
+    ],
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        },
+        {
+            "listen": "test",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        }
+    ],
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:9800",
+            "type": "string"
+        },
+        {
+            "key": "jwt_token",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "driver_id",
+            "value": "1",
+            "type": "string"
+        },
+        {
+            "key": "rider_id",
+            "value": "1",
+            "type": "string"
+        },
+        {
+            "key": "trip_id",
+            "value": "1",
+            "type": "string"
+        },
+        {
+            "key": "user_id",
+            "value": "1",
+            "type": "string"
+        },
+        {
+            "key": "coupon_id",
+            "value": "1",
+            "type": "string"
+        },
+        {
+            "key": "coupon_code",
+            "value": "SAVE10",
+            "type": "string"
+        },
+        {
+            "key": "verification_token",
+            "value": "",
+            "type": "string"
+        }
+    ]
+}

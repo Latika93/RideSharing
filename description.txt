@@ -1,0 +1,10 @@
+**Banking Simulation System** | *Spring Boot, Java, PostgreSQL, Spring Security, RabbitMQ, Spring Scheduler*
+
+* Engineered a **transaction-safe banking backend** supporting account creation, authentication (JWT-based), and multi-step fund transfers with **ACID-compliant** guarantees using Spring Data JPA and @Transactional.
+* Implemented **role-based security and encryption**, ensuring secure access control and safe credential management aligned with OWASP standards.
+* Designed **asynchronous and scheduled fund transfers** using RabbitMQ and Spring Scheduler for high-availability event-driven workflows.
+* Built a **transaction auditing and reporting layer** leveraging JPA auditing and pagination for real-time insights into account activity.
+* Containerized the system with **Docker Compose (Spring Boot + PostgreSQL + RabbitMQ)**, simulating a microservice-like environment suitable for horizontal scaling.
+* Wrote **unit and integration tests (JUnit + Mockito)** to validate transaction integrity, error handling, and concurrency edge cases.
+
+*Highlights: Demonstrates deep backend system design, transactional integrity, concurrency management, and production-grade architecture patterns expected in FAANG-level engineering.*

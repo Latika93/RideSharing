@@ -5,12 +5,14 @@ import com.RideSharing.RideSharing.dto.FareCalculationResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test class for fare calculation strategies
  */
+@ActiveProfiles("test")
 @SpringBootTest
 public class FareStrategyTest {
     
